@@ -1,0 +1,36 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+     <h1>Compose Post</h1>
+     <div class="container" id = "app"></div>
+    <script type = "text/babel">
+        function App() {
+            const[newposts, setNewposts] = React.useState(null);
+
+            fuction newPost () {
+                fetch(`#`, {
+                    method: "POST",
+                    body: JSON.stringfy ({
+                        posts: document.getElementById("new-post").value
+                    }),
+                })
+                .then((response) => response.json())
+                .then((result) => {
+                    document.getElementById("post-button").disabled = true;
+                    })
+            }
+            
+        }
+    </script>
+
+
+    {% comment %} <form id="post form">
+        {% csrf_token %}
+        <div class="form-group">
+            <textarea class="form-control" id="post-info" placeholder="Write Post"></textarea>
+            <button type="submit" id="button" class="btn btn-primary">Submit</button>
+        </div>
+    </form> {% endcomment %}
+
+{% endblock %}
