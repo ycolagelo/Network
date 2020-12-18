@@ -3,81 +3,37 @@
 {% block body %}
 <div class="container" id="app"></div>
 <script type="text/babel">
-    function showPosts() {
-        fetch(`/post_list`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                setPosts(data);
-            })
-    }
-    function displayPosts()
-         React.useEffect(() => {
-            showPosts();
-        }, [])
 
-        if (posts) {
-            return <div>
-                
-                    {posts.map(post => {
-                        console.log(post)
-                        return <div class="row">
-                            <span class="border-bottom">
-                                <div class="col">
-                                    <p><strong>{post.username}</strong></p>
-                                    <div>{post.posts}</div>
-                                    <div>{post.date}</div>
-                                </div>
-                            </span>
-                        </div>
-                        // <hr>
-
-                        // <li>{post.posts} {post.username}</li>
-                    })}
-            
-            </div>
     function App() {
         const [posts, setPosts] = React.useState(null);
-
-       
-        // Call shoPosts() when app is loaded
-       
+        function showPosts() {
+            fetch(`/post_list`)
+                .then(response => response.json())
+                .then(response => {
+                    console.log(` post data`, response);
+                    setPosts(response);
+                })
         }
 
-        function writePost() {
-            document.getElementById("pencil").addEventListner("click", (e) => {
-                e.preventDefault();
-                displayFrom();
+        React.useEffect(() => {
+            showPosts();
+        }, [])
+        if (posts) {
+            return posts.map(post => {
+                return (<div className="row" key={post.id}>
+                    <span className="border-bottom" />
+                    <div className="col">
+                        <p> <strong>{post.username}</strong></p>
+                        <div>{post.posts}</div>
+                        <div>{post.date}</div>
+                    </div>
+                </div>)
             })
-
         }
-
-        function displayForm()
-        render() {
-            <form id="post form">
-                <div class="form-group">
-                    <textarea class="form-control" id="post-info" placeholder="Write Post"></textarea>
-                    <button type="submit" id="button" class="btn btn-primary">POST</button>
-                </div>
-            </form>
+        if (!posts) {
+            return "No posts"
         }
     }
-
-
-    ReactDOM.render(<App />, document.querySelector('#app'));
+    ReactDOM.render(<App />, document.querySelector('#app'));  
 </script>
-
 {% endblock %}
-
-
-
-{% comment %} {%if user.is_autheticated%} {% endcomment %}
-{% comment %} <h1>Compose Post</h1>
-<form id="post form">
-    {% csrf_token %}
-    <div class="form-group">
-        <textarea class="form-control" id="post-info" placeholder="Write Post"></textarea>
-        <button type="submit" id="button" class="btn btn-primary">Submit</button>
-    </div>
-</form> {% endcomment %}
-{% comment %} {% endif %} {% endcomment %}
