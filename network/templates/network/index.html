@@ -6,6 +6,8 @@
 
     function App() {
         const [posts, setPosts] = React.useState(null);
+        const [newpost, setNewpost] = React.useState(null);
+        {% comment %} document.getElementById('post-form').style.display = none; {% endcomment %}
         function showPosts() {
             fetch(`/post_list`)
                 .then(response => response.json())
@@ -13,6 +15,34 @@
                     console.log(` post data`, response);
                     setPosts(response);
                 })
+        }
+
+        document.getElementById("pencil").onclick = (event) => {
+            {% comment %} event.preventDefault(); {% endcomment %}
+            {% comment %} document.getElementById("post-form").style.display = block; {% endcomment %}
+            newPost();
+            console.log(newPost); 
+            }
+
+        function newPost() {
+                return <form id="post-form"> 
+                        <div class="form-group">
+                        <textarea class="form-control" id="post-info" placeholder="Write Post"></textarea>
+                        <button type="submit" id="button" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form> 
+
+                fetch(`/new_post`, {
+                    method: "POST",
+                    body: JSON.stringfy ({
+                        posts: document.getElementById("new-post").value
+                    }),
+                })
+                .then((response) => response.json())
+                .then((result) => {
+                    document.getElementById("pencil").disabled = true;
+                    })
+            
         }
 
         React.useEffect(() => {

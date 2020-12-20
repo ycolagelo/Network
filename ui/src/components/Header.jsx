@@ -21,7 +21,7 @@ export function Header({ isAuthenticated, user, onPageChange }) {
                 </a>
               </li>
               <li>
-                <a className="nav-link" href="#" id="pencil">
+                <a className="nav-link" href="#" onclick={() => Pages.NEWPOST}>
                   {" "}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
