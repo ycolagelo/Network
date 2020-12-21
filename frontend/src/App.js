@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Header } from "./components/Header";
 import { Pages } from "./constants";
@@ -7,12 +7,19 @@ import { AllPostsPage } from "./pages/AllPosts";
 import { NewPost } from "./pages/NewPosts";
 
 function App() {
-  const isAuthenticated = true;
-  const user = {
-    username: "ycolangelo",
-  };
-
   const [page, setPage] = useState(Pages.HOME);
+  const [userInfo, setUserInfo] = useState(null);
+
+  function getUserInfo() {
+    fetch("/api/user_info")
+      .then((response) => response.json())
+      .then((user) => {
+        setUserInfo(user);
+      });
+  }
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   function handlePageChange(page) {
     setPage(page);
@@ -21,8 +28,8 @@ function App() {
   return (
     <div>
       <Header
-        isAuthenticated={isAuthenticated}
-        user={user}
+        isAuthenticated={userInfo !== null}
+        user={userInfo}
         onPageChange={handlePageChange}
       />
       <div>Main Content</div>

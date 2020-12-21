@@ -3,7 +3,15 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    def serialize(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "full_name": self.get_full_name()
+        }
 
 
 class Newposts(models.Model):
