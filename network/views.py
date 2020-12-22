@@ -1,21 +1,25 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Newposts, Followers
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
 def index(request):
     return render(request, "network/index.html")
 
 
+@csrf_exempt
 def new_post(request):
     """stores a new post into json"""
     if request.method == "POST":
-        Newposts(
+        data = json.loads(request.body)
+        post = Newposts(
             user=request.user,
-            post=request.POST["post-info"]
+            posts=data['posts'],
         )
-        Newposts.save()
-    return JsonResponse({"message": "post is successful."}, status=201)
+        post.save()
+        return JsonResponse(post.serialize(), status=201)
 
 
 def post_list(request):

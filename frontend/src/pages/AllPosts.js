@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Posts } from "../components/Posts";
+import { NewPostForm } from "../components/NewPostForm";
 
 export function AllPostsPage() {
   const [posts, setPosts] = useState([]);
@@ -20,6 +21,7 @@ export function AllPostsPage() {
   return (
     <div>
       <h2>All Posts</h2>
+      <NewPostForm />
       <Posts posts={posts} />
     </div>
   );

@@ -4,10 +4,9 @@ import { Header } from "./components/Header";
 import { Pages } from "./constants";
 import { HomePage } from "./pages/Home";
 import { AllPostsPage } from "./pages/AllPosts";
-import { NewPost } from "./pages/NewPosts";
 
 function App() {
-  const [page, setPage] = useState(Pages.HOME);
+  const [page, setPage] = useState(Pages.ALL_POSTS);
   const [userInfo, setUserInfo] = useState(null);
 
   function getUserInfo() {
@@ -35,7 +34,6 @@ function App() {
       <div>Main Content</div>
       {page === Pages.HOME && <HomePage />}
       {page === Pages.ALL_POSTS && <AllPostsPage />}
-      {page === Pages.NEW_POSTS && <NewPost />}
     </div>
   );
 }
