@@ -25,15 +25,16 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="font-sans text-gray-900">
       <Header
         isAuthenticated={userInfo !== null}
         user={userInfo}
         onPageChange={handlePageChange}
       />
-      <div>Main Content</div>
-      {page === Pages.HOME && <HomePage />}
-      {page === Pages.ALL_POSTS && <AllPostsPage />}
+      <div className="container mx-auto">
+        {page === Pages.HOME && <HomePage />}
+        {page === Pages.ALL_POSTS && <AllPostsPage />}
+      </div>
     </div>
   );
 }

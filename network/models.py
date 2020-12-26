@@ -18,7 +18,7 @@ class Newposts(models.Model):
     """Models for storing new posts"""
     user = models.ForeignKey(User, on_delete=models.PROTECT, null=False)
     posts = models.CharField(max_length=400, null=False)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
     likes = models.IntegerField(default=0)
 
     def serialize(self):

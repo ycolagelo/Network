@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { Button } from "./Button";
 
-export function NewPostForm() {
+export function NewPostForm({ onNewPostCreated }) {
   const [newPostValue, setNewPostValue] = useState("");
 
   function handleSubmit(event) {
@@ -13,8 +14,9 @@ export function NewPostForm() {
       }),
     })
       .then((res) => res.json())
-      .then((posts) => {
-        console.log("new post:", posts);
+      .then((post) => {
+        onNewPostCreated(post);
+        setNewPostValue("");
       });
   }
 
@@ -24,18 +26,18 @@ export function NewPostForm() {
 
   return (
     <div>
-      <h5>New Post</h5>
       <form className="form" onSubmit={handleSubmit}>
         <textarea
+          required
           className="form-control"
           name="new-post"
           value={newPostValue}
           onChange={handleNewPostChange}
           placeholder="New Post"
         />
-        <button className="btn btn-primary" type="submit">
+        <Button buttonStyle="primary" extraClasses="mt-2" type="submit">
           Post
-        </button>
+        </Button>
       </form>
     </div>
   );

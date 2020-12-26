@@ -28,9 +28,6 @@ def post_list(request):
     posts = Newposts.objects.all()
     posts = posts.order_by("-date").all()
 
-    if not posts:
-        return JsonResponse({"error": "No data found"}, status=400)
-
     return JsonResponse([post.serialize() for post in posts], safe=False)
 
 

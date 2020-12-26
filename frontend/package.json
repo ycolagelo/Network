@@ -11,17 +11,20 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
+    "autoprefixer": "^10.1.0",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.0.1",
     "eslint": "^7.16.0",
     "eslint-plugin-react": "^7.21.5",
+    "postcss": "^8.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "style-loader": "^2.0.0",
+    "tailwindcss": "^2.0.2",
     "webpack": "^5.11.0",
     "webpack-cli": "^4.2.0"
   }

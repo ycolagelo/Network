@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Posts } from "../components/Posts";
 import { NewPostForm } from "../components/NewPostForm";
+import { Card } from "../components/Card";
 
 export function AllPostsPage() {
   const [posts, setPosts] = useState([]);
@@ -18,11 +19,19 @@ export function AllPostsPage() {
     fetchPosts();
   }, []);
 
+  function handlePostCreated(newPost) {
+    setPosts([newPost, ...posts]);
+  }
+
   return (
-    <div>
-      <h2>All Posts</h2>
-      <NewPostForm />
-      <Posts posts={posts} />
+    <div className="mt-2">
+      <h2 className="text-2xl">All Posts</h2>
+      <Card extraClasses="mt-4">
+        <NewPostForm onNewPostCreated={handlePostCreated} />
+      </Card>
+      <div className="mt-4">
+        <Posts posts={posts} />
+      </div>
     </div>
   );
 }
