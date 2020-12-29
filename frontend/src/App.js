@@ -4,6 +4,7 @@ import { Header } from "./components/Header";
 import { Pages } from "./constants";
 import { HomePage } from "./pages/Home";
 import { AllPostsPage } from "./pages/AllPosts";
+import { ProfilePage } from "./pages/profile";
 
 function App() {
   const [page, setPage] = useState(Pages.ALL_POSTS);
@@ -33,7 +34,10 @@ function App() {
       />
       <div className="container mx-auto">
         {page === Pages.HOME && <HomePage />}
-        {page === Pages.ALL_POSTS && <AllPostsPage />}
+        {page === Pages.ALL_POSTS && (
+          <AllPostsPage isAuthenticated={userInfo !== null} />
+        )}
+        {page == Pages.PROFILE && <ProfilePage />}
       </div>
     </div>
   );

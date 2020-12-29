@@ -10,7 +10,7 @@ class NewpostsAdmin(admin.ModelAdmin):
 
 
 class FollowerAdmin(admin.ModelAdmin):
-    list_display = ("user", "follower")
+    list_display = ("user", "following")
 
 
 admin.site.register(Newposts, NewpostsAdmin)

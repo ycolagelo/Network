@@ -3,7 +3,7 @@ import { Posts } from "../components/Posts";
 import { NewPostForm } from "../components/NewPostForm";
 import { Card } from "../components/Card";
 
-export function AllPostsPage() {
+export function AllPostsPage({ isAuthenticated }) {
   const [posts, setPosts] = useState([]);
 
   function fetchPosts() {
@@ -26,9 +26,11 @@ export function AllPostsPage() {
   return (
     <div className="mt-2">
       <h2 className="text-2xl">All Posts</h2>
-      <Card extraClasses="mt-4">
-        <NewPostForm onNewPostCreated={handlePostCreated} />
-      </Card>
+      {isAuthenticated && (
+        <Card extraClasses="mt-4">
+          <NewPostForm onNewPostCreated={handlePostCreated} />
+        </Card>
+      )}
       <div className="mt-4">
         <Posts posts={posts} />
       </div>

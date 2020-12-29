@@ -14,6 +14,10 @@ class User(AbstractUser):
         }
 
 
+def serialize_array(objects):
+    return [u.serialize() for u in objects]
+
+
 class Newposts(models.Model):
     """Models for storing new posts"""
     user = models.ForeignKey(User, on_delete=models.PROTECT, null=False)
@@ -35,12 +39,13 @@ class Followers(models.Model):
     """stores who the user is following"""
     user = models.ForeignKey(
         User, on_delete=models.PROTECT, null=False, related_name="user")
-    follower = models.ForeignKey(
-        User, on_delete=models.PROTECT, null=False, related_name='follower')
+    following = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name='following')
 
     def serialize(self):
         return{
             "id": self.id,
             "user": self.user.username,
-            "follower": [user.username for user in self.follower.all()]
+            "following": self.following.username,
+
         }

@@ -16,11 +16,15 @@ export function Header({ isAuthenticated, user, onPageChange }) {
           {isAuthenticated && (
             <>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <a
+                  className="nav-link"
+                  href="#"
+                  onClick={() => onPageChange(Pages.PROFILE)}
+                >
                   <strong>{user.username}</strong>
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a className="nav-link" href="#" onClick={() => Pages.NEWPOST}>
                   {" "}
                   <svg
@@ -37,7 +41,7 @@ export function Header({ isAuthenticated, user, onPageChange }) {
                     />
                   </svg>
                 </a>
-              </li>
+              </li> */}
             </>
           )}
 

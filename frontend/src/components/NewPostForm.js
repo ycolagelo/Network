@@ -13,7 +13,17 @@ export function NewPostForm({ onNewPostCreated }) {
         posts: newPostValue,
       }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        // TODO: We can move this 401 redirect to login
+        // logic into a helper function instead of
+        // doing it manually every time we fetch
+        if (res.status === 401) {
+          // 401 error means unauthenticated
+          window.location.href = "/login";
+          throw new Error("Request Failed due to not being logged in");
+        }
+        return res.json();
+      })
       .then((post) => {
         onNewPostCreated(post);
         setNewPostValue("");
