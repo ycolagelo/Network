@@ -40,9 +40,9 @@ def user_info(request):
     return JsonResponse(None, safe=False)
 
 
-def profile(request, user_id):
+def profile(request, username):
     """loads the profile page for the user"""
-    user = User.objects.get(id=user_id)
+    user = User.objects.get(username=username)
 
     followers = Followers.objects.filter(following=user).all()
     following = Followers.objects.filter(user=user).all()

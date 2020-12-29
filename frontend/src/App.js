@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
+
 import "./App.css";
 import { Header } from "./components/Header";
-import { Pages } from "./constants";
 import { HomePage } from "./pages/Home";
 import { AllPostsPage } from "./pages/AllPosts";
 import { ProfilePage } from "./pages/profile";
 
 function App() {
-  const [page, setPage] = useState(Pages.ALL_POSTS);
   const [userInfo, setUserInfo] = useState(null);
 
   function getUserInfo() {
@@ -21,25 +21,27 @@ function App() {
     getUserInfo();
   }, []);
 
-  function handlePageChange(page) {
-    setPage(page);
-  }
+  const isAuthenticated = userInfo !== null;
 
   return (
-    <div className="font-sans text-gray-900">
-      <Header
-        isAuthenticated={userInfo !== null}
-        user={userInfo}
-        onPageChange={handlePageChange}
-      />
-      <div className="container mx-auto">
-        {page === Pages.HOME && <HomePage />}
-        {page === Pages.ALL_POSTS && (
-          <AllPostsPage isAuthenticated={userInfo !== null} />
-        )}
-        {page == Pages.PROFILE && <ProfilePage />}
+    <Router>
+      <div className="font-sans text-gray-900">
+        <Header isAuthenticated={isAuthenticated} user={userInfo} />
+        <div className="container mx-auto">
+          <Switch>
+            <Route path="/profile/:username">
+              <ProfilePage />
+            </Route>
+            <Route path="/">
+              <AllPostsPage isAuthenticated={isAuthenticated} />
+            </Route>
+            {/* <Route path="/">
+              <HomePage />
+            </Route> */}
+          </Switch>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 

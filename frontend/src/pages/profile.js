@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Posts } from "../components/Posts";
 
 export function ProfilePage() {
@@ -8,9 +9,10 @@ export function ProfilePage() {
     posts: [],
     user: { username: "" },
   });
+  const { username } = useParams();
 
   function fetchProfile() {
-    fetch("api/profile/1")
+    fetch(`api/profile/${username}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -20,7 +22,7 @@ export function ProfilePage() {
 
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, [username]);
 
   return (
     <div>
