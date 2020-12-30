@@ -3,7 +3,6 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
 import "./App.css";
 import { Header } from "./components/Header";
-import { HomePage } from "./pages/Home";
 import { AllPostsPage } from "./pages/AllPosts";
 import { ProfilePage } from "./pages/profile";
 
@@ -29,15 +28,12 @@ function App() {
         <Header isAuthenticated={isAuthenticated} user={userInfo} />
         <div className="container mx-auto">
           <Switch>
-            <Route path="/profile/:username">
-              <ProfilePage />
+            <Route path="/profile/:profileUsername">
+              <ProfilePage currentUser={userInfo} />
             </Route>
             <Route path="/">
               <AllPostsPage isAuthenticated={isAuthenticated} />
             </Route>
-            {/* <Route path="/">
-              <HomePage />
-            </Route> */}
           </Switch>
         </div>
       </div>

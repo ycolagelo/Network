@@ -53,3 +53,36 @@ def profile(request, username):
                          'posts': serialize_array(own_posts),
                          'user': user.serialize()},
                         safe=False)
+
+
+#
+# TODO: Unique constraint in the models for (user, following)
+#
+
+def is_following(request, username):
+    is_following = Followers.objects.filter(
+        user=request.user, following__username=username).count() == 1
+
+    return JsonResponse({'is_following': is_following}, safe=False)
+
+
+def follow(request, username):
+
+    if request.mothod == "POST":
+
+        new_following = Followers(
+            user=request.user,
+            following=username
+        )
+        new_following.save()
+        return JsonResponse({"message": 'following was successful'}, safe=False)
+
+
+def unfollow(request, username):
+
+    if request.method == "POST":
+
+        Followers.objects.filter(
+            user=request.user, following__username=username).delete()
+
+        return JsonResponse({"message": " item deleted successfully"}, safe=False)

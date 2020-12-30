@@ -11,6 +11,11 @@ export function Button({
     colorClasses = "bg-indigo-500 hover:bg-indigo-600 text-gray-50";
   } else if (buttonStyle === "secondary") {
     colorClasses = "bg-gray-400 hover:bg-gray-500 text-white";
+  } else {
+    console.error(
+      "invalid value supplied for `buttonStyle` prop of `Button`. Value supplied:",
+      buttonStyle
+    );
   }
 
   return (
