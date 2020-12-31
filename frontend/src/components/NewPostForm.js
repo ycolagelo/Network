@@ -36,15 +36,17 @@ export function NewPostForm({ onNewPostCreated }) {
 
   return (
     <div>
-      <form className="form" onSubmit={handleSubmit}>
-        <textarea
-          required
-          className="form-control"
-          name="new-post"
-          value={newPostValue}
-          onChange={handleNewPostChange}
-          placeholder="New Post"
-        />
+      <form className="" onSubmit={handleSubmit}>
+        <div className="w-full">
+          <textarea
+            required
+            className="w-full h-20"
+            name="new-post"
+            value={newPostValue}
+            onChange={handleNewPostChange}
+            placeholder="New Post"
+          />
+        </div>
         <Button buttonStyle="primary" extraClasses="mt-2" type="submit">
           Post
         </Button>

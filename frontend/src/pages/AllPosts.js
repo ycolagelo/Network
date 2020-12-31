@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Posts } from "../components/Posts";
 import { NewPostForm } from "../components/NewPostForm";
 import { Card } from "../components/Card";
+import { Title } from "../components/Title";
 
 export function AllPostsPage({ isAuthenticated }) {
   const [posts, setPosts] = useState([]);
@@ -25,9 +26,9 @@ export function AllPostsPage({ isAuthenticated }) {
 
   return (
     <div className="mt-2">
-      <h2 className="text-2xl">All Posts</h2>
+      <Title>All Posts</Title>
       {isAuthenticated && (
-        <Card extraClasses="mt-4">
+        <Card>
           <NewPostForm onNewPostCreated={handlePostCreated} />
         </Card>
       )}

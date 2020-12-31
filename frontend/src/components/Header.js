@@ -1,57 +1,77 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export function Header({ isAuthenticated, user }) {
-  return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <Link className="navbar-brand" to="/">
-        Network
-      </Link>
-      <div>
-        <ul className="navbar-nav mr-auto">
-          {isAuthenticated && (
-            <>
-              <li className="nav-item">
-                <Link className="nav-link" to={`/profile/${user.username}`}>
-                  <strong>{user.username}</strong>
-                </Link>
-              </li>
-            </>
-          )}
+function NavItem({ children }) {
+  return <div className="px-2">{children}</div>;
+}
 
-          <li className="nav-item">
-            <Link className="nav-link" to="/">
-              All Posts
-            </Link>
-          </li>
-          {isAuthenticated ? (
-            <>
-              <li className="nav-item">
-                <Link className="nav-link" to={"/following-posts"}>
-                  Following
-                </Link>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/logout">
-                  Log Out
-                </a>
-              </li>
-            </>
-          ) : (
-            <>
-              <li className="nav-item">
-                <a className="nav-link" href="/login">
-                  Log In
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/register">
-                  Register
-                </a>
-              </li>
-            </>
-          )}
-        </ul>
+function Brand({ children }) {
+  return <div className="px-2 font-bold text-gray-300">{children}</div>;
+}
+
+const LINK_CLASSES = "text-gray-100 hover:text-gray-300";
+
+function StyledLink({ children, to, extraClasses = "" }) {
+  return (
+    <Link className={`${LINK_CLASSES} ${extraClasses}`} to={to}>
+      {children}
+    </Link>
+  );
+}
+
+function StyledA({ children, href, extraClasses = "" }) {
+  return (
+    <a href={href} className={`${LINK_CLASSES} ${extraClasses}`}>
+      {children}
+    </a>
+  );
+}
+
+export function Header({ isAuthenticated, user }) {
+  // grid grid-cols-2
+  return (
+    <nav className="p-4 flex justify-between bg-indigo-800">
+      {/* Left Side */}
+      <div className="flex list-none">
+        <Brand>
+          <Link to="/">Network</Link>
+        </Brand>
+        {isAuthenticated && (
+          <NavItem>
+            <StyledLink
+              extraClasses="font-medium"
+              to={`/profile/${user.username}`}
+            >
+              {user.username}
+            </StyledLink>
+          </NavItem>
+        )}
+        <NavItem>
+          <StyledLink to="/">All Posts</StyledLink>
+        </NavItem>
+        {isAuthenticated && (
+          <NavItem>
+            <StyledLink to={"/following-posts"}>Following</StyledLink>
+          </NavItem>
+        )}
+      </div>
+
+      {/* Right Side */}
+      <div className="flex justify-end">
+        {isAuthenticated ? (
+          <NavItem>
+            <StyledA href="/logout">Log Out</StyledA>
+          </NavItem>
+        ) : (
+          <>
+            <NavItem>
+              <StyledA href="/login">Log In</StyledA>
+            </NavItem>
+            <NavItem>
+              <StyledA href="/register">Register</StyledA>
+            </NavItem>
+          </>
+        )}
       </div>
     </nav>
   );

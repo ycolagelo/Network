@@ -24,10 +24,10 @@ function App() {
   const isAuthenticated = userInfo !== null;
 
   return (
-    <Router>
-      <div className="font-sans text-gray-900">
+    <div className="font-sans text-gray-900 box-border">
+      <Router>
         <Header isAuthenticated={isAuthenticated} user={userInfo} />
-        <div className="container mx-auto">
+        <div className="container mx-auto px-4">
           <Switch>
             <Route path="/" exact={true}>
               <AllPostsPage isAuthenticated={isAuthenticated} />
@@ -46,8 +46,8 @@ function App() {
             <Route path="/">No page found</Route>
           </Switch>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </div>
   );
 }
 
