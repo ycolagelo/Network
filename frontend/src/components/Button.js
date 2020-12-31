@@ -5,6 +5,7 @@ export function Button({
   extraClasses = "",
   type = "button",
   buttonStyle = "primary",
+  onClick = undefined,
 }) {
   let colorClasses;
   if (buttonStyle === "primary") {
@@ -22,6 +23,7 @@ export function Button({
     <button
       className={`${colorClasses} rounded px-4 py-2 ${extraClasses}`}
       type={type}
+      onClick={onClick}
     >
       {children}
     </button>

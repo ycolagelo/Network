@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Posts } from "../components/Posts";
 import { Button } from "../components/Button";
+import { Title } from "../components/Title";
 
 export function ProfilePage({ currentUser }) {
   const { profileUsername } = useParams();
@@ -36,22 +37,58 @@ export function ProfilePage({ currentUser }) {
       });
   }
 
+  function handelFollowButtonClick(event) {
+    event.preventDefault();
+    fetch("api/update_followers", {
+      method: "POST",
+      body: JSON.stringify({
+        following: profileUsername,
+      }),
+    }).then((response) => {
+      if (response.ok) {
+        // fetchIsFollowing();
+        setIsFollowing(true);
+      }
+    });
+  }
+
+  function handelUnFollowButton(event) {
+    event.preventDefault();
+    fetch("api/update_followers", {
+      method: "DELETE",
+      body: JSON.stringify({
+        following: profileUsername,
+      }),
+    }).then((response) => {
+      if (response.ok) {
+        setIsFollowing(false);
+      }
+    });
+  }
   const currentUsername = currentUser ? currentUser.username : "";
 
   return (
     <div>
-      <h1 className="text-2xl font-medium">{profileData.user.username}</h1>
+      <Title>{profileData.user.username}</Title>
       <div>Followers: {profileData.followers.length}</div>
       <div>Following: {profileData.following.length}</div>
       {currentUsername !== profileUsername && (
         <>
           {isFollowing && (
-            <Button buttonStyle="secondary" extraClasses="mt-2" type="submit">
+            <Button
+              buttonStyle="secondary"
+              extraClasses="mt-2"
+              onClick={handelUnFollowButton}
+            >
               Unfollow
             </Button>
           )}
           {!isFollowing && (
-            <Button buttonStyle="secondary" extraClasses="mt-2" type="submit">
+            <Button
+              buttonStyle="secondary"
+              extraClasses="mt-2"
+              onClick={handelFollowButtonClick}
+            >
               Follow
             </Button>
           )}

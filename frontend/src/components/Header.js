@@ -27,9 +27,9 @@ export function Header({ isAuthenticated, user }) {
           {isAuthenticated ? (
             <>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <Link className="nav-link" to={"/following-posts"}>
                   Following
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="/logout">

@@ -66,23 +66,40 @@ def is_following(request, username):
     return JsonResponse({'is_following': is_following}, safe=False)
 
 
-def follow(request, username):
-
-    if request.mothod == "POST":
-
-        new_following = Followers(
-            user=request.user,
-            following=username
-        )
-        new_following.save()
-        return JsonResponse({"message": 'following was successful'}, safe=False)
-
-
-def unfollow(request, username):
+@csrf_exempt
+def update_followers(request):
 
     if request.method == "POST":
+        data = json.loads(request.body)
+        following_user = User.objects.get(username=data["following"])
+        new_entry = Followers(
+            following=following_user,
+            user=request.user
+        )
+        new_entry.save()
+        return JsonResponse({"Message": "Saved Successfully"}, status=200)
+    if request.method == "DELETE":
+        data = json.loads(request.body)
+        try:
+            following = Followers.objects.get(
+                user=request.user, following__username=data["following"])
+        except Followers.DoesNotExist:
+            return JsonResponse({"Error": "This person does not exist."}, status=404)
+        if data.get("following") is not None:
+            following.delete()
+        return JsonResponse({"Message": "Deleted Successfully"}, status=200)
 
-        Followers.objects.filter(
-            user=request.user, following__username=username).delete()
 
-        return JsonResponse({"message": " item deleted successfully"}, safe=False)
+@ajax_login_required
+def following_posts(request):
+    me_following = Followers.objects.filter(user=request.user).all()
+    following_users = [f.following for f in me_following]
+
+    # following_users = []
+    # for f in me_following:
+    #     following_users.append(f.following)
+
+    following_posts = Newposts.objects.filter(
+        user__in=following_users).all()
+
+    return JsonResponse(serialize_array(following_posts), safe=False)
