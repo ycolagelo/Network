@@ -46,7 +46,6 @@ export function ProfilePage({ currentUser }) {
       }),
     }).then((response) => {
       if (response.ok) {
-        // fetchIsFollowing();
         setIsFollowing(true);
       }
     });
@@ -65,6 +64,23 @@ export function ProfilePage({ currentUser }) {
       }
     });
   }
+
+  function handlePostUpdated(updatedPost) {
+    const updatedPostList = profileData.posts.map((post) => {
+      if (post.id === updatedPost.id) {
+        return updatedPost;
+      }
+      return post;
+    });
+
+    // Update the posts property in profileData with a new object
+    // containing the old profile data + the new posts array
+    setProfileData({
+      ...profileData,
+      posts: updatedPostList,
+    });
+  }
+
   const currentUsername = currentUser ? currentUser.username : "";
 
   return (
@@ -95,7 +111,12 @@ export function ProfilePage({ currentUser }) {
         </>
       )}
       <h2>Posts:</h2>
-      <Posts posts={profileData.posts} usernameToNotLink={profileUsername} />
+      <Posts
+        posts={profileData.posts}
+        usernameToNotLink={profileUsername}
+        currentUser={currentUser}
+        onPostUpdated={handlePostUpdated}
+      />
     </div>
   );
 }

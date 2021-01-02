@@ -4,7 +4,7 @@ import { NewPostForm } from "../components/NewPostForm";
 import { Card } from "../components/Card";
 import { Title } from "../components/Title";
 
-export function AllPostsPage({ isAuthenticated }) {
+export function AllPostsPage({ isAuthenticated, currentUser }) {
   const [posts, setPosts] = useState([]);
 
   function fetchPosts() {
@@ -24,6 +24,16 @@ export function AllPostsPage({ isAuthenticated }) {
     setPosts([newPost, ...posts]);
   }
 
+  function handlePostUpdated(updatedPost) {
+    const updatedPostList = posts.map((post) => {
+      if (post.id === updatedPost.id) {
+        return updatedPost;
+      }
+      return post;
+    });
+    setPosts(updatedPostList);
+  }
+
   return (
     <div className="mt-2">
       <Title>All Posts</Title>
@@ -33,7 +43,11 @@ export function AllPostsPage({ isAuthenticated }) {
         </Card>
       )}
       <div className="mt-4">
-        <Posts posts={posts} />
+        <Posts
+          posts={posts}
+          currentUser={currentUser}
+          onPostUpdated={handlePostUpdated}
+        />
       </div>
     </div>
   );

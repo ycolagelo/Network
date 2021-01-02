@@ -103,3 +103,16 @@ def following_posts(request):
         user__in=following_users).all()
 
     return JsonResponse(serialize_array(following_posts), safe=False)
+
+
+@csrf_exempt
+@ajax_login_required
+def edit_post(request, post_id):
+    if request.method == "PATCH":
+        post = Newposts.objects.get(pk=post_id, user=request.user)
+        data = json.loads(request.body)
+        post.posts = data["posts"]
+
+        post.save()
+
+        return JsonResponse(post.serialize(), safe=False)

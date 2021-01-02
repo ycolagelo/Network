@@ -30,7 +30,10 @@ function App() {
         <div className="container mx-auto px-4">
           <Switch>
             <Route path="/" exact={true}>
-              <AllPostsPage isAuthenticated={isAuthenticated} />
+              <AllPostsPage
+                isAuthenticated={isAuthenticated}
+                currentUser={userInfo}
+              />
             </Route>
             <Route path="/profile/:profileUsername">
               <ProfilePage currentUser={userInfo} />
