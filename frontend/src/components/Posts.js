@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "./Button";
 import { Card } from "./Card";
 import { PencilIcon } from "./icons/Pencil";
+import { CheckCircleIcon } from "./icons/CheckCircle";
+import { XCircleIcon } from "./icons/XCircle";
+import { ThumbsUpIcon } from "./icons/ThumbsUp";
+import { TextArea } from "./forms/TextArea";
 
 export function Posts({
   posts = [],
@@ -38,6 +41,10 @@ export function Posts({
       setEditableId(post.id);
     }
 
+    function handleLikeClick() {
+      // TODO: fetch()
+    }
+
     return (
       <Card key={post.id} extraClasses="mb-2">
         <div className="font-medium flex justify-between">
@@ -49,18 +56,54 @@ export function Posts({
               onClick={handleEditClick}
             />
           )}
+          {post.id == editableId && (
+            <div>
+              <SaveButton className="mr-1" form={`edit-post-form-${post.id}`}>
+                Save
+              </SaveButton>
+              <CancelButton onClick={() => setEditableId(null)} />
+            </div>
+          )}
         </div>
         {postBody}
         <div className="text-sm text-gray-500">{post.date}</div>
+        <div className="flex items-start mt-1">
+          <LikeButton onClick={handleLikeClick} />
+          <span className="text-sm text-gray-600">{post.likes || ""}</span>
+        </div>
       </Card>
     );
   });
 }
 
-function EditButton({ onClick, extraClasses = "" }) {
+function LikeButton({ ...props }) {
   return (
-    <button type="button" onClick={onClick}>
-      <PencilIcon className={`w-4 text-gray-600 ${extraClasses}`} />
+    <button type="button">
+      <ThumbsUpIcon className="w-4 text-indigo-500" />
+    </button>
+  );
+}
+
+function EditButton({ ...props }) {
+  return (
+    <button type="button" {...props}>
+      <PencilIcon className="w-4 text-gray-600" />
+    </button>
+  );
+}
+
+function CancelButton({ ...props }) {
+  return (
+    <button type="button" {...props}>
+      <XCircleIcon className="w-4 text-gray-600" />
+    </button>
+  );
+}
+
+function SaveButton({ ...props }) {
+  return (
+    <button type="submit" {...props}>
+      <CheckCircleIcon className={`w-4 text-indigo-600`} />
     </button>
   );
 }
@@ -92,11 +135,12 @@ function EditablePost({ post, onPostUpdated }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <textarea value={value} onChange={handleChange} />
-      <div>
-        <Button type="submit">Save</Button>
-      </div>
+    <form
+      id={`edit-post-form-${post.id}`}
+      onSubmit={handleSubmit}
+      className="my-1"
+    >
+      <TextArea value={value} onChange={handleChange} />
     </form>
   );
 }

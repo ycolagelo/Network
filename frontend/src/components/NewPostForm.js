@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "./Button";
+import { TextArea } from "./forms/TextArea";
 
 export function NewPostForm({ onNewPostCreated }) {
   const [newPostValue, setNewPostValue] = useState("");
@@ -38,7 +39,7 @@ export function NewPostForm({ onNewPostCreated }) {
     <div>
       <form className="" onSubmit={handleSubmit}>
         <div className="w-full">
-          <textarea
+          <TextArea
             required
             className="w-full h-20"
             name="new-post"

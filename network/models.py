@@ -23,7 +23,6 @@ class Newposts(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, null=False)
     posts = models.CharField(max_length=400, null=False)
     date = models.DateTimeField(auto_now_add=True)
-    likes = models.IntegerField(default=0)
 
     def serialize(self):
         return {
@@ -31,8 +30,11 @@ class Newposts(models.Model):
             "username": self.user.username,
             "posts": self.posts,
             "date": self.date.strftime("%b %-d %Y, %-I: %M %P"),
-            "likes": self.likes
+
         }
+
+    def __str__(self):
+        return f"{self.posts}"
 
 
 class Followers(models.Model):
@@ -49,3 +51,27 @@ class Followers(models.Model):
             "following": self.following.username,
 
         }
+
+
+class Likes(models.Model):
+    """Keeps track of the likes and the unlikes"""
+    user = models.ForeignKey(
+        User, on_delete=models.PROTECT, null=False, related_name="like_user"
+    )
+    post = models.ForeignKey(
+        Newposts, on_delete=models.PROTECT, null=False, related_name="post"
+    )
+    like = models.IntegerField(default=0)
+    unlike = models.IntegerField(default=0)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user": self.user.username,
+            "post": self.post.posts,
+            "like": self.like,
+            "unlike": self.unlike
+        }
+
+    # def __str__(self):
+    #     return f"{self.user} {self.post.posts}"
