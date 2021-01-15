@@ -6,6 +6,7 @@ import { CheckCircleIcon } from "./icons/CheckCircle";
 import { XCircleIcon } from "./icons/XCircle";
 import { ThumbsUpIcon } from "./icons/ThumbsUp";
 import { TextArea } from "./forms/TextArea";
+import { ThumbsUpFilledIcon } from "./icons/ThumbsUpFilled";
 
 export function Posts({
   posts = [],
@@ -42,7 +43,24 @@ export function Posts({
     }
 
     function handleLikeClick() {
-      // TODO: fetch()
+      fetch(`api/like_post/${post.id}`, {
+        method: "POST",
+      })
+        .then((response) => response.json())
+        .then((updatedPost) => {
+          console.log(updatedPost);
+          onPostUpdated(updatedPost);
+        });
+    }
+    function handleUnlikeClick() {
+      fetch(`api/unlike_post/${post.id}`, {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((updatedPost) => {
+          console.log(updatedPost);
+          onPostUpdated(updatedPost);
+        });
     }
 
     return (
@@ -52,7 +70,7 @@ export function Posts({
           {currentUser?.username === post.username && post.id != editableId && (
             <EditButton
               type="button"
-              extraClasses="ml-2"
+              className="ml-2"
               onClick={handleEditClick}
             />
           )}
@@ -67,8 +85,9 @@ export function Posts({
         </div>
         {postBody}
         <div className="text-sm text-gray-500">{post.date}</div>
-        <div className="flex items-start mt-1">
-          <LikeButton onClick={handleLikeClick} />
+        <div className="flex items-center mt-1">
+          {!post.liked_by_me && <LikeButton onClick={handleLikeClick} />}
+          {post.liked_by_me && <UnLikeButton onClick={handleUnlikeClick} />}
           <span className="text-sm text-gray-600">{post.likes || ""}</span>
         </div>
       </Card>
@@ -78,8 +97,15 @@ export function Posts({
 
 function LikeButton({ ...props }) {
   return (
-    <button type="button">
+    <button type="button" {...props}>
       <ThumbsUpIcon className="w-4 text-indigo-500" />
+    </button>
+  );
+}
+function UnLikeButton({ ...props }) {
+  return (
+    <button type="button" {...props}>
+      <ThumbsUpFilledIcon className="w-4 text-indigo-500" />
     </button>
   );
 }

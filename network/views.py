@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Newposts, Followers, serialize_array, User
+from .models import Newposts, Followers, serialize_array, User, Likes
 from .decorators import ajax_login_required
 
 
@@ -22,7 +22,7 @@ def new_post(request):
             posts=data['posts'],
         )
         post.save()
-        return JsonResponse(post.serialize(), status=201)
+        return JsonResponse(post.serialize_with_userinfo(request.user), status=201)
 
 
 def post_list(request):
@@ -31,7 +31,7 @@ def post_list(request):
     posts = Newposts.objects.all()
     posts = posts.order_by("-date").all()
 
-    return JsonResponse([post.serialize() for post in posts], safe=False)
+    return JsonResponse([post.serialize_with_userinfo(request.user) for post in posts], safe=False)
 
 
 def user_info(request):
@@ -40,6 +40,7 @@ def user_info(request):
     return JsonResponse(None, safe=False)
 
 
+@ajax_login_required
 def profile(request, username):
     """loads the profile page for the user"""
     user = User.objects.get(username=username)
@@ -50,7 +51,7 @@ def profile(request, username):
 
     return JsonResponse({'followers': serialize_array(followers),
                          "following": serialize_array(following),
-                         'posts': serialize_array(own_posts),
+                         'posts': [post.serialize_with_userinfo(request.user) for post in own_posts],
                          'user': user.serialize()},
                         safe=False)
 
@@ -58,7 +59,7 @@ def profile(request, username):
 #
 # TODO: Unique constraint in the models for (user, following)
 #
-
+@ajax_login_required
 def is_following(request, username):
     is_following = Followers.objects.filter(
         user=request.user, following__username=username).count() == 1
@@ -66,6 +67,7 @@ def is_following(request, username):
     return JsonResponse({'is_following': is_following}, safe=False)
 
 
+@ajax_login_required
 @csrf_exempt
 def update_followers(request):
 
@@ -115,4 +117,40 @@ def edit_post(request, post_id):
 
         post.save()
 
-        return JsonResponse(post.serialize(), safe=False)
+        return JsonResponse(post.serialize_with_userinfo(request.user), safe=False)
+
+
+@csrf_exempt
+@ajax_login_required
+def like_post(request, post_id):
+    if request.method == "POST":
+        likes = Likes.objects.filter(post_id=post_id, user=request.user)
+        if likes.count() > 0:
+            return JsonResponse("user already liked this post", safe=False, status=400)
+
+        new_like = Likes()
+        new_like.user = request.user
+        new_like.post_id = post_id
+        new_like.save()
+
+        post = Newposts.objects.get(pk=post_id)
+        return JsonResponse(post.serialize_with_userinfo(request.user), safe=False)
+
+
+@csrf_exempt
+@ajax_login_required
+def unlike_post(request, post_id):
+    if request.method == "DELETE":
+        unlike = Likes.objects.filter(post_id=post_id, user=request.user)
+        if unlike.count() <= 0:
+            return JsonResponse("user already unliked this post", safe=False)
+
+        unlike.delete()
+        post = Newposts.objects.get(pk=post_id)
+        return JsonResponse(post.serialize_with_userinfo(request.user), safe=False)
+
+
+@ajax_login_required
+def numb_likes(request):
+    likes = Likes.objects.all().count()
+    return JsonResponse(likes, safe=False)

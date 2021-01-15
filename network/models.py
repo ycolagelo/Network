@@ -30,8 +30,14 @@ class Newposts(models.Model):
             "username": self.user.username,
             "posts": self.posts,
             "date": self.date.strftime("%b %-d %Y, %-I: %M %P"),
-
+            "likes": self.likes.count()
         }
+
+    def serialize_with_userinfo(self, user):
+        is_liked = self.likes.filter(user=user).count() > 0
+        obj = self.serialize()
+        obj['liked_by_me'] = is_liked
+        return obj
 
     def __str__(self):
         return f"{self.posts}"
@@ -49,29 +55,21 @@ class Followers(models.Model):
             "id": self.id,
             "user": self.user.username,
             "following": self.following.username,
-
         }
 
 
 class Likes(models.Model):
     """Keeps track of the likes and the unlikes"""
     user = models.ForeignKey(
-        User, on_delete=models.PROTECT, null=False, related_name="like_user"
+        User, on_delete=models.PROTECT, null=False,
     )
     post = models.ForeignKey(
-        Newposts, on_delete=models.PROTECT, null=False, related_name="post"
+        Newposts, on_delete=models.PROTECT, null=False, related_name="likes"
     )
-    like = models.IntegerField(default=0)
-    unlike = models.IntegerField(default=0)
 
     def serialize(self):
         return {
             "id": self.id,
             "user": self.user.username,
-            "post": self.post.posts,
-            "like": self.like,
-            "unlike": self.unlike
+            "post_id": self.post.id
         }
-
-    # def __str__(self):
-    #     return f"{self.user} {self.post.posts}"

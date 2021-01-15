@@ -14,7 +14,7 @@ class FollowerAdmin(admin.ModelAdmin):
 
 
 class LikesAdmin(admin.ModelAdmin):
-    list_display = ("user", "post", "like", "unlike")
+    list_display = ("user", "post")
 
 
 admin.site.register(Newposts, NewpostsAdmin)
