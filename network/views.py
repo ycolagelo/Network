@@ -6,6 +6,8 @@ from django.http import JsonResponse
 from .models import Newposts, Followers, serialize_array, User, Likes
 from .decorators import ajax_login_required
 
+DEFAULT_PAGE_SIZE = 10
+
 
 def index(request):
     return render(request, "network/index.html")
@@ -27,11 +29,17 @@ def new_post(request):
 
 def post_list(request):
     """returns the posts in the database"""
-    # posts = serializers.serialize("json", Newposts.objects.all())
-    posts = Newposts.objects.all()
-    posts = posts.order_by("-date").all()
+    limit = int(request.GET.get('limit', default=DEFAULT_PAGE_SIZE))
+    offset = int(request.GET.get('offset', default=0))
 
-    return JsonResponse([post.serialize_with_userinfo(request.user) for post in posts], safe=False)
+    posts = Newposts.objects.all()
+    count = posts.count()
+    posts = posts.order_by("-date")[offset:limit + offset]
+
+    responseObj = {}
+    responseObj['data'] = [post.serialize() for post in posts]
+    responseObj['count'] = count
+    return JsonResponse(responseObj, safe=False)
 
 
 def user_info(request):
@@ -47,7 +55,7 @@ def profile(request, username):
 
     followers = Followers.objects.filter(following=user).all()
     following = Followers.objects.filter(user=user).all()
-    own_posts = Newposts.objects.filter(user=user).all()
+    own_posts = Newposts.objects.filter(user=user).all().order_by("-date")
 
     return JsonResponse({'followers': serialize_array(followers),
                          "following": serialize_array(following),

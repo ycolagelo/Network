@@ -13,6 +13,7 @@ export function Posts({
   usernameToNotLink = "",
   currentUser,
   onPostUpdated,
+  isAuthenticated,
 }) {
   const [editableId, setEditableId] = useState(null);
 
@@ -85,11 +86,13 @@ export function Posts({
         </div>
         {postBody}
         <div className="text-sm text-gray-500">{post.date}</div>
-        <div className="flex items-center mt-1">
-          {!post.liked_by_me && <LikeButton onClick={handleLikeClick} />}
-          {post.liked_by_me && <UnLikeButton onClick={handleUnlikeClick} />}
-          <span className="text-sm text-gray-600">{post.likes || ""}</span>
-        </div>
+        {isAuthenticated && (
+          <div className="flex items-center mt-1">
+            {!post.liked_by_me && <LikeButton onClick={handleLikeClick} />}
+            {post.liked_by_me && <UnLikeButton onClick={handleUnlikeClick} />}
+            <span className="text-sm text-gray-600">{post.likes || ""}</span>
+          </div>
+        )}
       </Card>
     );
   });
